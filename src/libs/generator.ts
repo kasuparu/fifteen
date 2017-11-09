@@ -2,7 +2,7 @@ import {
     State,
     FIELD_SIZE,
     Field
-} from './index';
+} from './meta';
 
 import {
     getEmptyTileIndex,

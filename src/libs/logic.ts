@@ -3,7 +3,7 @@ import {
     Field,
     Coordinates,
     FIELD_SIZE
-} from './index';
+} from './meta';
 
 import {
     coordinatesToIndex,

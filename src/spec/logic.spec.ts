@@ -2,7 +2,7 @@ import {
     State,
     FIELD_SIZE,
     Coordinates
-} from '../libs/index';
+} from '../libs/meta';
 
 import {
     performMove,

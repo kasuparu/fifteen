@@ -3,7 +3,7 @@ import {
     Field,
     FIELD_SIZE,
     Coordinates
-} from '../libs/index';
+} from '../libs/meta';
 
 export const coordinatesToIndex = (coordinates: Coordinates): number => {
     return coordinates[0] + coordinates[1] * FIELD_SIZE;

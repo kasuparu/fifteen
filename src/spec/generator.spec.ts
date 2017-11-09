@@ -1,7 +1,7 @@
 import {
     FIELD_SIZE,
     Field
-} from '../libs/index';
+} from '../libs/meta';
 
 import {
     generateState,

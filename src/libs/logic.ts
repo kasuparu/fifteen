@@ -2,8 +2,7 @@ import {
     State,
     Field,
     Coordinates,
-    FIELD_WIDTH,
-    FIELD_HEIGHT
+    FIELD_SIZE
 } from './index';
 
 import {
@@ -70,7 +69,7 @@ export const getMovingTileCoordinates = (state: State, move: Move): Coordinates 
 export const validateCoordinates = (coordinates: Coordinates): boolean => {
     return coordinates &&
         coordinates[0] >= 0 &&
-        coordinates[0] < FIELD_WIDTH &&
+        coordinates[0] < FIELD_SIZE &&
         coordinates[1] >= 0 &&
-        coordinates[1] < FIELD_HEIGHT;
+        coordinates[1] < FIELD_SIZE;
 };

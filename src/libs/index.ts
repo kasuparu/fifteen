@@ -1,6 +1,5 @@
 
-export const FIELD_WIDTH = 4;
-export const FIELD_HEIGHT = 4;
+export const FIELD_SIZE = 4;
 
 export interface State {
     field: Field;

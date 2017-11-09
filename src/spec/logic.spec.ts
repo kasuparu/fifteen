@@ -1,7 +1,6 @@
 import {
     State,
-    FIELD_WIDTH,
-    FIELD_HEIGHT
+    FIELD_SIZE
 } from '../libs/index';
 
 import {
@@ -63,22 +62,22 @@ describe('logic.getMovingTileCoordinates', () => {
 
 describe('logic.validateCoordinates', () => {
     it('returns the coordinates within bounds are valid', () => {
-        for (let x = 0; x < FIELD_WIDTH; x++) {
-            for (let y = 0; y < FIELD_HEIGHT; y++) {
+        for (let x = 0; x < FIELD_SIZE; x++) {
+            for (let y = 0; y < FIELD_SIZE; y++) {
                 expect(validateCoordinates([x, y])).toEqual(true);
             }
         }
     });
 
     it('returns the coordinates out of bounds are invalid', () => {
-        for (let x = 0; x < FIELD_WIDTH; x++) {
+        for (let x = 0; x < FIELD_SIZE; x++) {
             expect(validateCoordinates([x, -1])).toEqual(false);
-            expect(validateCoordinates([x, FIELD_HEIGHT])).toEqual(false);
+            expect(validateCoordinates([x, FIELD_SIZE])).toEqual(false);
         }
 
-        for (let y = 0; y < FIELD_HEIGHT; y++) {
+        for (let y = 0; y < FIELD_SIZE; y++) {
             expect(validateCoordinates([-1, y])).toEqual(false);
-            expect(validateCoordinates([FIELD_WIDTH, y])).toEqual(false);
+            expect(validateCoordinates([FIELD_SIZE, y])).toEqual(false);
         }
     });
 });

@@ -1,6 +1,5 @@
 import {
-    FIELD_WIDTH,
-    FIELD_HEIGHT,
+    FIELD_SIZE,
     Field
 } from '../libs/index';
 
@@ -10,25 +9,25 @@ import {
     getEmptyTileCoordinates
 } from '../libs/utils';
 
-const STATE_LENGTH = FIELD_WIDTH * FIELD_HEIGHT;
+const STATE_LENGTH = FIELD_SIZE * FIELD_SIZE;
 
 describe('utils.coordinatesToIndex', () => {
     it('returns the correct results', () => {
         expect(coordinatesToIndex([0, 0])).toEqual(0);
-        expect(coordinatesToIndex([0, 1])).toEqual(FIELD_WIDTH);
-        expect(coordinatesToIndex([1, 1])).toEqual(1 + 1 * FIELD_WIDTH);
-        expect(coordinatesToIndex([2, 2])).toEqual(2 + 2 * FIELD_WIDTH);
-        expect(coordinatesToIndex([FIELD_WIDTH - 1, FIELD_HEIGHT - 1])).toEqual(STATE_LENGTH - 1);
+        expect(coordinatesToIndex([0, 1])).toEqual(FIELD_SIZE);
+        expect(coordinatesToIndex([1, 1])).toEqual(1 + 1 * FIELD_SIZE);
+        expect(coordinatesToIndex([2, 2])).toEqual(2 + 2 * FIELD_SIZE);
+        expect(coordinatesToIndex([FIELD_SIZE - 1, FIELD_SIZE - 1])).toEqual(STATE_LENGTH - 1);
     });
 });
 
 describe('utils.indexToCoordinates', () => {
     it('returns the correct results', () => {
         expect(indexToCoordinates(0)).toEqual([0, 0]);
-        expect(indexToCoordinates(FIELD_WIDTH)).toEqual([0, 1]);
-        expect(indexToCoordinates(1 + 1 * FIELD_WIDTH)).toEqual([1, 1]);
-        expect(indexToCoordinates(2 + 2 * FIELD_WIDTH)).toEqual([2, 2]);
-        expect(indexToCoordinates(STATE_LENGTH - 1)).toEqual([FIELD_WIDTH - 1, FIELD_HEIGHT - 1]);
+        expect(indexToCoordinates(FIELD_SIZE)).toEqual([0, 1]);
+        expect(indexToCoordinates(1 + 1 * FIELD_SIZE)).toEqual([1, 1]);
+        expect(indexToCoordinates(2 + 2 * FIELD_SIZE)).toEqual([2, 2]);
+        expect(indexToCoordinates(STATE_LENGTH - 1)).toEqual([FIELD_SIZE - 1, FIELD_SIZE - 1]);
     });
 });
 
@@ -42,8 +41,8 @@ describe('utils.indexToCoordinates * indexToCoordinates', () => {
 
 describe('utils.indexToCoordinates * indexToCoordinates', () => {
     it('returns the correct cross-results for all the coordinates', () => {
-        for (let x = 0; x < FIELD_WIDTH; x++) {
-            for (let y = 0; y < FIELD_HEIGHT; y++) {
+        for (let x = 0; x < FIELD_SIZE; x++) {
+            for (let y = 0; y < FIELD_SIZE; y++) {
                 expect(indexToCoordinates(coordinatesToIndex([x, y]))).toEqual([x, y]);
             }
         }

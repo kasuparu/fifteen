@@ -1,17 +1,27 @@
 import {
     State,
+    FIELD_SIZE,
     Field
 } from './index';
 
 import {
+    getEmptyTileIndex,
     swapInPlace
 } from './utils';
 
 export const generateState = (length: number): State => {
+    let field: Field;
+    do {
+        field = generateField(length);
+    } while (!isSolvable(field));
+    return {field};
+};
+
+const generateField = (length: number): Field => {
     const field: Field = [...Array(length).keys()];
     field[0] = undefined;
     shuffleFieldInPlace(field);
-    return {field};
+    return field;
 };
 
 // https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
@@ -23,4 +33,46 @@ const shuffleFieldInPlace = (field: Field): void => {
         swapWithIndex = Math.floor(Math.random() * (index + 1));
         swapInPlace(field, index, swapWithIndex);
     }
+};
+
+const isSolvable = (field: Field): boolean => {
+    // http://mathworld.wolfram.com/15Puzzle.html
+    // for the puzzle field to be solvavble, the inversion sum + row number of an empty square should be even
+    const inversionCounts = getInversionCounts(field);
+    const inversionSum = arraySum(inversionCounts);
+    return (inversionSum + getEmptyTileRow(field)) % 2 === 0;
+};
+
+export const getInversionCounts = (field: Field): number[] => {
+    const length = field.length;
+    replaceFirst(field, undefined, length);
+
+    const inversionCounts = field.map((tile, index) => {
+        let inversionCount = 0;
+        for (let index2 = index + 1; index2 < length; index2++) {
+            if (tile > field[index2]) {
+                inversionCount++;
+            }
+        }
+        return inversionCount;
+    });
+    replaceFirst(field, length, undefined);
+
+    return inversionCounts;
+};
+
+const arraySum = (array: number[]): number => {
+    return array.reduce((sum, element) => sum + element, 0);
+};
+
+const getEmptyTileRow = (field: Field): number => {
+    return getEmptyTileIndex(field) % FIELD_SIZE + 1;
+};
+
+const replaceFirst = (field: Field, find: number, replace: number) => {
+    field.forEach((tile, index) => {
+        if (tile === find) {
+            field[index] = replace;
+        }
+    });
 };

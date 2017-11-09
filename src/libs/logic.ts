@@ -7,8 +7,10 @@ import {
 
 import {
     coordinatesToIndex,
+    indexToCoordinates,
     getEmptyTileCoordinates,
-    swapInPlace
+    swapInPlace,
+    tileIndex
 } from './utils';
 
 import {
@@ -20,6 +22,10 @@ export interface ValidatedMove {
     emptyTileCoordinates: Coordinates;
     movingTileCoordinates: Coordinates;
 }
+
+export const performMoveByTile = (state: State, tile: number): State => {
+    return performMove(state, indexToCoordinates(tileIndex(state.field, tile)));
+};
 
 export const performMove = (state: State, movingTileCoordinates: Coordinates): State => {
     const newField: Field = [...state.field];

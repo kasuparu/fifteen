@@ -1,20 +1,21 @@
 {
-  "name": "fifteen",
-  "version": "0.1.0",
-  "description": "15 puzzle",
-  "main": "index.js",
-  "scripts": {
-    "lint:ts": "tslint --format stylish --project ./tsconfig.json && tsc --noEmit --rootDir src/",
-    "test": "jasmine-ts \"src/spec/**/*.spec.ts\""
-  },
-  "author": "kasuparu",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/jasmine": "^2.6.3",
-    "jasmine": "^2.8.0",
-    "jasmine-core": "^2.8.0",
-    "jasmine-ts": "^0.2.1",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
-  }
+    "name": "fifteen",
+    "version": "0.1.0",
+    "description": "15 puzzle",
+    "main": "index.js",
+    "scripts": {
+        "build": "tsc -m amd",
+        "lint:ts": "tslint --format stylish --project ./tsconfig.json && tsc --noEmit",
+        "test": "jasmine-ts \"src/spec/**/*.spec.ts\""
+    },
+    "author": "kasuparu",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/jasmine": "^2.6.3",
+        "jasmine": "^2.8.0",
+        "jasmine-core": "^2.8.0",
+        "jasmine-ts": "^0.2.1",
+        "tslint": "^5.8.0",
+        "typescript": "^2.6.1"
+    }
 }

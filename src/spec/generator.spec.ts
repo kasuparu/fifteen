@@ -11,7 +11,7 @@ import {
 const STATE_LENGTH = FIELD_SIZE * FIELD_SIZE;
 
 describe('generator.generateState', () => {
-    const state = generateState(STATE_LENGTH);
+    const state = generateState();
 
     it('returns an array of given length', () => {
         expect(state.field.length).toEqual(STATE_LENGTH);

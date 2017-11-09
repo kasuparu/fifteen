@@ -9,10 +9,12 @@ import {
     swapInPlace
 } from './utils';
 
-export const generateState = (length: number): State => {
+const STATE_LENGTH = FIELD_SIZE * FIELD_SIZE;
+
+export const generateState = (): State => {
     let field: Field;
     do {
-        field = generateField(length);
+        field = generateField(STATE_LENGTH);
     } while (!isSolvable(field));
     return {field};
 };

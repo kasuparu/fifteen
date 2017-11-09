@@ -10,8 +10,8 @@
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "removeComments": false,
-        "rootDir": "src",
-        "outDir": "build",
+        "rootDir": "src/",
+        "outFile": "static/libs.js",
         "module": "commonjs",
         "moduleResolution": "node",
         "noLib": false,
@@ -23,11 +23,7 @@
         "forceConsistentCasingInFileNames": true
     },
     "exclude": [
-        "node_modules",
-        "build",
-        "docs",
-        "gulpfile.js",
-        "tools"
+        "node_modules"
     ],
     "compileOnSave": false
 }

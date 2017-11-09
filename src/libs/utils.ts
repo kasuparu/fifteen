@@ -24,5 +24,9 @@ export const getEmptyTileCoordinates = (state: State): Coordinates => {
 };
 
 export const getEmptyTileIndex = (field: Field): number => {
-    return field.indexOf(undefined);
+    return tileIndex(field, undefined);
+};
+
+export const tileIndex = (field: Field, tile: number): number => {
+    return field.indexOf(tile);
 };

@@ -11,12 +11,9 @@ import {
     swapInPlace
 } from './utils';
 
-export enum Move {
-    LEFT = 'left',
-    RIGHT = 'right',
-    UP = 'up',
-    DOWN = 'down'
-}
+import {
+    getInversionsSum
+} from './generator';
 
 export interface ValidatedMove {
     valid: boolean;
@@ -24,9 +21,9 @@ export interface ValidatedMove {
     movingTileCoordinates: Coordinates;
 }
 
-export const performMove = (state: State, move: Move): State => {
+export const performMove = (state: State, movingTileCoordinates: Coordinates): State => {
     const newField: Field = [...state.field];
-    const {valid, emptyTileCoordinates, movingTileCoordinates} = validateMove(state, move);
+    const {valid, emptyTileCoordinates} = validateMove(state, movingTileCoordinates);
 
     if (valid) {
         swapInPlace(
@@ -39,31 +36,18 @@ export const performMove = (state: State, move: Move): State => {
     return {field: newField};
 };
 
-export const validateMove = (state: State, move: Move): ValidatedMove => {
+export const validateMove = (state: State, movingTileCoordinates: Coordinates): ValidatedMove => {
     const emptyTileCoordinates = getEmptyTileCoordinates(state);
-    const movingTileCoordinates = getMovingTileCoordinates(state, move);
     return {
-        valid: validateCoordinates(movingTileCoordinates),
+        valid: areAdjacent(movingTileCoordinates, emptyTileCoordinates) &&
+            validateCoordinates(movingTileCoordinates),
         emptyTileCoordinates,
         movingTileCoordinates
     };
 };
 
-export const getMovingTileCoordinates = (state: State, move: Move): Coordinates => {
-    const emptyTileCoordinates = getEmptyTileCoordinates(state);
-    switch (move) {
-        case Move.LEFT:
-            return [emptyTileCoordinates[0] + 1, emptyTileCoordinates[1]];
-        case Move.RIGHT:
-            return [emptyTileCoordinates[0] - 1, emptyTileCoordinates[1]];
-        case Move.UP:
-            return [emptyTileCoordinates[0], emptyTileCoordinates[1] + 1];
-        case Move.DOWN:
-            return [emptyTileCoordinates[0], emptyTileCoordinates[1] - 1];
-        default:
-            console.error('getMovingTileCoordinates illegal move');
-            return undefined;
-    }
+export const areAdjacent = (tile1: Coordinates, tile2: Coordinates): boolean => {
+    return Math.abs(tile1[0] - tile2[0]) + Math.abs(tile1[1] - tile2[1]) === 1;
 };
 
 export const validateCoordinates = (coordinates: Coordinates): boolean => {
@@ -72,4 +56,8 @@ export const validateCoordinates = (coordinates: Coordinates): boolean => {
         coordinates[0] < FIELD_SIZE &&
         coordinates[1] >= 0 &&
         coordinates[1] < FIELD_SIZE;
+};
+
+export const isSolved = (state: State): boolean => {
+    return getInversionsSum(state.field) === 0;
 };

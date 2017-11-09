@@ -1,13 +1,13 @@
 import {
     State,
-    FIELD_SIZE
+    FIELD_SIZE,
+    Coordinates
 } from '../libs/index';
 
 import {
-    // validateMove,
-    validateCoordinates,
-    getMovingTileCoordinates,
-    Move
+    performMove,
+    validateMove,
+    validateCoordinates
 } from '../libs/logic';
 
 // TODO Make all the fixtures and tests agnostic to the field size
@@ -20,15 +20,18 @@ const stateWithEmptyAt11: State = {
         12, 13, 14, 15
     ]
 };
-
-const stateWithEmptyAt00: State = {
-    field: [
-        undefined, 1, 2, 3,
-        4, 5, 6, 7,
-        8, 9, 10, 11,
-        12, 13, 14, 15
-    ]
-};
+const validMoves11: Coordinates[] = [
+    [0, 1],
+    [1, 0],
+    [2, 1],
+    [1, 2]
+];
+const invalidMoves11: Coordinates[] = [
+    [0, 0],
+    [1, 1],
+    [2, 2],
+    [3, 3]
+];
 
 const stateWithEmptyAt33: State = {
     field: [
@@ -36,27 +39,85 @@ const stateWithEmptyAt33: State = {
         5, 6, 7, 8,
         9, 10, 11, 12,
         13, 14, 15, undefined
-   ]
+    ]
 };
+const validMoves33: Coordinates[] = [
+    [2, 3],
+    [3, 2]
+];
+const invalidMoves33: Coordinates[] = [
+    [4, 3],
+    [3, 4]
+];
 
-// describe('validateMove', () => {
-//
-// });
+describe('logic.performMove', () => {
+    it('performs valid moves', () => {
+        expect(performMove(stateWithEmptyAt33, validMoves33[0])).toEqual({
+            field: [
+                1, 2, 3, 4,
+                5, 6, 7, 8,
+                9, 10, 11, 12,
+                13, 14, undefined, 15
+            ]
+        });
 
-describe('logic.getMovingTileCoordinates', () => {
-    it('returns mathematically correct tile coordinates of the 4 legal moves', () => {
-        expect(getMovingTileCoordinates(stateWithEmptyAt11, Move.LEFT)).toEqual([2, 1]);
-        expect(getMovingTileCoordinates(stateWithEmptyAt11, Move.RIGHT)).toEqual([0, 1]);
-        expect(getMovingTileCoordinates(stateWithEmptyAt11, Move.UP)).toEqual([1, 2]);
-        expect(getMovingTileCoordinates(stateWithEmptyAt11, Move.DOWN)).toEqual([1, 0]);
+        expect(performMove(stateWithEmptyAt33, validMoves33[1])).toEqual({
+            field: [
+                1, 2, 3, 4,
+                5, 6, 7, 8,
+                9, 10, 11, undefined,
+                13, 14, 15, 12
+            ]
+        });
     });
 
-    it('returns mathematically correct tile coordinates of the illegal moves', () => {
-        expect(getMovingTileCoordinates(stateWithEmptyAt00, Move.RIGHT)).toEqual([-1, 0]);
-        expect(getMovingTileCoordinates(stateWithEmptyAt00, Move.DOWN)).toEqual([0, -1]);
+    it('does not perform invalid move', () => {
+        invalidMoves33.forEach((invalidMove) => {
+            expect(performMove(stateWithEmptyAt33, invalidMove)).toEqual(stateWithEmptyAt33);
+        });
+    });
+});
 
-        expect(getMovingTileCoordinates(stateWithEmptyAt33, Move.LEFT)).toEqual([4, 3]);
-        expect(getMovingTileCoordinates(stateWithEmptyAt33, Move.UP)).toEqual([3, 4]);
+// TODO performMove
+describe('logic.validateMove', () => {
+    it('returns valid moves', () => {
+        validMoves11.forEach((validMove) => {
+            expect(validateMove(stateWithEmptyAt11, validMove)).toEqual({
+                valid: true,
+                emptyTileCoordinates: [1, 1],
+                movingTileCoordinates: validMove
+            });
+        });
+    });
+
+    it('returns invalid moves', () => {
+        invalidMoves11.forEach((invalidMove) => {
+            expect(validateMove(stateWithEmptyAt11, invalidMove)).toEqual({
+                valid: false,
+                emptyTileCoordinates: [1, 1],
+                movingTileCoordinates: invalidMove
+            });
+        });
+    });
+
+    it('returns valid moves - out of bounds test', () => {
+        validMoves33.forEach((validMove) => {
+            expect(validateMove(stateWithEmptyAt33, validMove)).toEqual({
+                valid: true,
+                emptyTileCoordinates: [3, 3],
+                movingTileCoordinates: validMove
+            });
+        });
+    });
+
+    it('returns invalid moves - out of bounds test', () => {
+        invalidMoves33.forEach((invalidMove) => {
+            expect(validateMove(stateWithEmptyAt33, invalidMove)).toEqual({
+                valid: false,
+                emptyTileCoordinates: [3, 3],
+                movingTileCoordinates: invalidMove
+            });
+        });
     });
 });
 

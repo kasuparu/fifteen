@@ -1,40 +1,62 @@
 body {
+    display: flex;
     background-color: #e6e6e6;
 }
 
-.field {
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 500px;
-    height: 500px;
-    background-color: #f2f2f2;
-    position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     margin: auto;
 }
 
+.field-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+}
+
+.field {
+    width: 100%;
+    height: 100%;
+    background-color: #f2f2f2;
+}
+
 .tile {
-    color: #e2e2e2;
     box-sizing: border-box;
+    display: inline-block;
+    color: gold;
     width: 125px;
     height: 125px;
-    display:inline-block;
+    font-size: 36px;
+    text-align: center;
+    line-height: 125px;
     background-color: #333333;
     border-top: 5px solid #777777;
     border-left: 5px solid #777777;
     border-right: 5px solid #555555;
     border-bottom: 5px solid #555555;
     border-radius: 10px;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 125px;
 }
 
 .victory {
-    width: 400px;
-    height: 100px;
-    color: gold;
-    display: none;
+    /* display: none; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 500px;
+    height: 500px;
+    color: yellow;
     font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 500px;
+    background-color: rgba(125, 125, 125, 0.85);
+}
+
+.shuffle-button {
+    margin-top: 24px;
+    padding: 8px 16px;
+    font-size: 18px;
 }

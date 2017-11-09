@@ -38,9 +38,11 @@ const shuffleFieldInPlace = (field: Field): void => {
 const isSolvable = (field: Field): boolean => {
     // http://mathworld.wolfram.com/15Puzzle.html
     // for the puzzle field to be solvavble, the inversion sum + row number of an empty square should be even
-    const inversionCounts = getInversionCounts(field);
-    const inversionSum = arraySum(inversionCounts);
-    return (inversionSum + getEmptyTileRow(field)) % 2 === 0;
+    return (getInversionsSum(field) + getEmptyTileRow(field)) % 2 === 0;
+};
+
+export const getInversionsSum = (field: Field): number => {
+    return arraySum(getInversionCounts(field));
 };
 
 export const getInversionCounts = (field: Field): number[] => {

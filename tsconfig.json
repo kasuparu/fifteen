@@ -11,7 +11,7 @@
         "noImplicitReturns": true,
         "removeComments": false,
         "rootDir": "src/",
-        "outFile": "static/libs.js",
+        "outFile": "docs/libs.js",
         "module": "commonjs",
         "moduleResolution": "node",
         "noLib": false,

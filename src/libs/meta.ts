@@ -1,4 +1,3 @@
-
 export const FIELD_SIZE = 4;
 
 export interface State {

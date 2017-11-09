@@ -7,9 +7,7 @@ requirejs.config({
 requirejs(['libs/index'], (libs) => {
     let state = libs.generateState();
 
-    const TILE_SIZE = 125; // px
-
-
+    const TILE_SIZE = 500 / libs.FIELD_SIZE; // px
 
     const updateTilePositions = (state) => {
         state.field.forEach((tile, index) => {

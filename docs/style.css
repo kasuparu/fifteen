@@ -39,7 +39,9 @@ body {
     border-bottom: 5px solid #555555;
     border-radius: 10px;
     position: absolute;
-    transition: all 0.1s ease-in;
+    transition: all 0.2s ease-in;
+    user-select: none;
+    cursor: default;
 }
 
 .victory {

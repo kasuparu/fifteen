@@ -1,5 +1,6 @@
 import {
     State,
+    Field,
     FIELD_SIZE,
     Coordinates
 } from '../libs/meta';
@@ -7,7 +8,8 @@ import {
 import {
     performMove,
     validateMove,
-    validateCoordinates
+    validateCoordinates,
+    isSolved
 } from '../libs/logic';
 
 // TODO Make all the fixtures and tests agnostic to the field size
@@ -78,7 +80,6 @@ describe('logic.performMove', () => {
     });
 });
 
-// TODO performMove
 describe('logic.validateMove', () => {
     it('returns valid moves', () => {
         validMoves11.forEach((validMove) => {
@@ -140,5 +141,26 @@ describe('logic.validateCoordinates', () => {
             expect(validateCoordinates([-1, y])).toEqual(false);
             expect(validateCoordinates([FIELD_SIZE, y])).toEqual(false);
         }
+    });
+});
+
+const sortedStatesWithEmptyAt: State[] = [...Array(FIELD_SIZE - 2).keys()].map(
+    (emptyTileIndex: number): State => {
+        const field: Field = [...Array(FIELD_SIZE - 1).keys()];
+        field.splice(0, 1); // Delete the first 0
+        field.splice(emptyTileIndex, 0, undefined); // Insert empty at
+        return {field};
+    }
+);
+
+describe('logic.isSolved', () => {
+    it('returns false for the unsolved fields that have 0 inversions', () => {
+        sortedStatesWithEmptyAt.forEach((state) => {
+            expect(isSolved(state)).toEqual(false);
+        });
+    });
+
+    it('returns true for the solved field', () => {
+        expect(isSolved(stateWithEmptyAt33)).toEqual(true);
     });
 });

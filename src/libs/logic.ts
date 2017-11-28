@@ -6,9 +6,11 @@ import {
 } from './meta';
 
 import {
+    STATE_LENGTH,
     coordinatesToIndex,
     indexToCoordinates,
     getEmptyTileCoordinates,
+    getEmptyTileIndex,
     swapInPlace,
     tileIndex
 } from './utils';
@@ -65,5 +67,6 @@ export const validateCoordinates = (coordinates: Coordinates): boolean => {
 };
 
 export const isSolved = (state: State): boolean => {
-    return getInversionsSum(state.field) === 0;
+    return getInversionsSum(state.field) === 0
+        && getEmptyTileIndex(state.field) === STATE_LENGTH - 1;
 };

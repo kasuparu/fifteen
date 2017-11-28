@@ -5,6 +5,8 @@ import {
     Coordinates
 } from '../libs/meta';
 
+export const STATE_LENGTH = FIELD_SIZE * FIELD_SIZE;
+
 export const coordinatesToIndex = (coordinates: Coordinates): number => {
     return coordinates[0] + coordinates[1] * FIELD_SIZE;
 };

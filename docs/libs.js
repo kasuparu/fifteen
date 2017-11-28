@@ -6,6 +6,7 @@ define("libs/meta", ["require", "exports"], function (require, exports) {
 define("libs/utils", ["require", "exports", "libs/meta"], function (require, exports, meta_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.STATE_LENGTH = meta_1.FIELD_SIZE * meta_1.FIELD_SIZE;
     exports.coordinatesToIndex = (coordinates) => {
         return coordinates[0] + coordinates[1] * meta_1.FIELD_SIZE;
     };
@@ -122,7 +123,8 @@ define("libs/logic", ["require", "exports", "libs/meta", "libs/utils", "libs/gen
             coordinates[1] < meta_3.FIELD_SIZE;
     };
     exports.isSolved = (state) => {
-        return generator_1.getInversionsSum(state.field) === 0;
+        return generator_1.getInversionsSum(state.field) === 0
+            && utils_2.getEmptyTileIndex(state.field) === utils_2.STATE_LENGTH - 1;
     };
 });
 define("libs/index", ["require", "exports", "libs/meta", "libs/logic", "libs/generator", "libs/utils"], function (require, exports, meta_4, logic_1, generator_2, utils_3) {
@@ -134,18 +136,17 @@ define("libs/index", ["require", "exports", "libs/meta", "libs/logic", "libs/gen
     exports.generateState = generator_2.generateState;
     exports.indexToPosition = utils_3.indexToPosition;
 });
-define("spec/generator.spec", ["require", "exports", "libs/meta", "libs/generator"], function (require, exports, meta_5, generator_3) {
+define("spec/generator.spec", ["require", "exports", "libs/utils", "libs/generator"], function (require, exports, utils_4, generator_3) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    const STATE_LENGTH = meta_5.FIELD_SIZE * meta_5.FIELD_SIZE;
     describe('generator.generateState', () => {
         const state = generator_3.generateState();
         it('returns an array of given length', () => {
-            expect(state.field.length).toEqual(STATE_LENGTH);
+            expect(state.field.length).toEqual(utils_4.STATE_LENGTH);
         });
         it('contains all the needed tiles once', () => {
             const tilesInOrder = [undefined];
-            for (let tile = 1; tile < STATE_LENGTH; tile++) {
+            for (let tile = 1; tile < utils_4.STATE_LENGTH; tile++) {
                 tilesInOrder.push(tile);
             }
             const everyTileContainedOnce = tilesInOrder.every((tile) => {
@@ -162,25 +163,25 @@ define("spec/generator.spec", ["require", "exports", "libs/meta", "libs/generato
         const unsolvableField2 = [13, 10, 11, 6, 5, 7, 4, 8, 1, 12, 14, 9, 3, 15, 2, undefined];
         it('returns correct results for the solved field', () => {
             const counts = generator_3.getInversionCounts(solvedField);
-            expect(counts.length).toEqual(STATE_LENGTH - 1);
+            expect(counts.length).toEqual(utils_4.STATE_LENGTH - 1);
             expect(counts).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
         });
         it('returns correct results for solvable fields', () => {
             const counts = generator_3.getInversionCounts(solvableField);
-            expect(counts.length).toEqual(STATE_LENGTH - 1);
+            expect(counts.length).toEqual(utils_4.STATE_LENGTH - 1);
             expect(counts).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
         });
         it('returns correct results for unsolvable fields', () => {
             const counts1 = generator_3.getInversionCounts(unsolvableField1);
-            expect(counts1.length).toEqual(STATE_LENGTH - 1);
+            expect(counts1.length).toEqual(utils_4.STATE_LENGTH - 1);
             expect(counts1).toEqual([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
             const counts2 = generator_3.getInversionCounts(unsolvableField2);
-            expect(counts2.length).toEqual(STATE_LENGTH - 1);
+            expect(counts2.length).toEqual(utils_4.STATE_LENGTH - 1);
             expect(counts2).toEqual([12, 9, 9, 5, 4, 4, 3, 3, 0, 3, 3, 2, 1, 1, 0]);
         });
     });
 });
-define("spec/logic.spec", ["require", "exports", "libs/meta", "libs/logic"], function (require, exports, meta_6, logic_2) {
+define("spec/logic.spec", ["require", "exports", "libs/meta", "libs/logic"], function (require, exports, meta_5, logic_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // TODO Make all the fixtures and tests agnostic to the field size
@@ -245,7 +246,6 @@ define("spec/logic.spec", ["require", "exports", "libs/meta", "libs/logic"], fun
             });
         });
     });
-    // TODO performMove
     describe('logic.validateMove', () => {
         it('returns valid moves', () => {
             validMoves11.forEach((validMove) => {
@@ -286,58 +286,74 @@ define("spec/logic.spec", ["require", "exports", "libs/meta", "libs/logic"], fun
     });
     describe('logic.validateCoordinates', () => {
         it('returns the coordinates within bounds are valid', () => {
-            for (let x = 0; x < meta_6.FIELD_SIZE; x++) {
-                for (let y = 0; y < meta_6.FIELD_SIZE; y++) {
+            for (let x = 0; x < meta_5.FIELD_SIZE; x++) {
+                for (let y = 0; y < meta_5.FIELD_SIZE; y++) {
                     expect(logic_2.validateCoordinates([x, y])).toEqual(true);
                 }
             }
         });
         it('returns the coordinates out of bounds are invalid', () => {
-            for (let x = 0; x < meta_6.FIELD_SIZE; x++) {
+            for (let x = 0; x < meta_5.FIELD_SIZE; x++) {
                 expect(logic_2.validateCoordinates([x, -1])).toEqual(false);
-                expect(logic_2.validateCoordinates([x, meta_6.FIELD_SIZE])).toEqual(false);
+                expect(logic_2.validateCoordinates([x, meta_5.FIELD_SIZE])).toEqual(false);
             }
-            for (let y = 0; y < meta_6.FIELD_SIZE; y++) {
+            for (let y = 0; y < meta_5.FIELD_SIZE; y++) {
                 expect(logic_2.validateCoordinates([-1, y])).toEqual(false);
-                expect(logic_2.validateCoordinates([meta_6.FIELD_SIZE, y])).toEqual(false);
+                expect(logic_2.validateCoordinates([meta_5.FIELD_SIZE, y])).toEqual(false);
             }
         });
     });
+    const sortedStatesWithEmptyAt = [...Array(meta_5.FIELD_SIZE - 2).keys()].map((emptyTileIndex) => {
+        const field = [...Array(meta_5.FIELD_SIZE - 1).keys()];
+        field.splice(0, 1); // Delete the first 0
+        field.splice(emptyTileIndex, 0, undefined); // Insert empty at
+        return { field };
+    });
+    describe('logic.isSolved', () => {
+        it('returns false for the unsolved fields that have 0 inversions', () => {
+            sortedStatesWithEmptyAt.forEach((state) => {
+                expect(logic_2.isSolved(state)).toEqual(false);
+            });
+        });
+        it('returns true for the solved field', () => {
+            expect(logic_2.isSolved(stateWithEmptyAt33)).toEqual(true);
+        });
+    });
 });
-define("spec/utils.spec", ["require", "exports", "libs/meta", "libs/utils"], function (require, exports, meta_7, utils_4) {
+define("spec/utils.spec", ["require", "exports", "libs/meta", "libs/utils"], function (require, exports, meta_6, utils_5) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    const STATE_LENGTH = meta_7.FIELD_SIZE * meta_7.FIELD_SIZE;
+    const STATE_LENGTH = meta_6.FIELD_SIZE * meta_6.FIELD_SIZE;
     describe('utils.coordinatesToIndex', () => {
         it('returns the correct results', () => {
-            expect(utils_4.coordinatesToIndex([0, 0])).toEqual(0);
-            expect(utils_4.coordinatesToIndex([0, 1])).toEqual(meta_7.FIELD_SIZE);
-            expect(utils_4.coordinatesToIndex([1, 1])).toEqual(1 + 1 * meta_7.FIELD_SIZE);
-            expect(utils_4.coordinatesToIndex([2, 2])).toEqual(2 + 2 * meta_7.FIELD_SIZE);
-            expect(utils_4.coordinatesToIndex([meta_7.FIELD_SIZE - 1, meta_7.FIELD_SIZE - 1])).toEqual(STATE_LENGTH - 1);
+            expect(utils_5.coordinatesToIndex([0, 0])).toEqual(0);
+            expect(utils_5.coordinatesToIndex([0, 1])).toEqual(meta_6.FIELD_SIZE);
+            expect(utils_5.coordinatesToIndex([1, 1])).toEqual(1 + 1 * meta_6.FIELD_SIZE);
+            expect(utils_5.coordinatesToIndex([2, 2])).toEqual(2 + 2 * meta_6.FIELD_SIZE);
+            expect(utils_5.coordinatesToIndex([meta_6.FIELD_SIZE - 1, meta_6.FIELD_SIZE - 1])).toEqual(STATE_LENGTH - 1);
         });
     });
     describe('utils.indexToCoordinates', () => {
         it('returns the correct results', () => {
-            expect(utils_4.indexToCoordinates(0)).toEqual([0, 0]);
-            expect(utils_4.indexToCoordinates(meta_7.FIELD_SIZE)).toEqual([0, 1]);
-            expect(utils_4.indexToCoordinates(1 + 1 * meta_7.FIELD_SIZE)).toEqual([1, 1]);
-            expect(utils_4.indexToCoordinates(2 + 2 * meta_7.FIELD_SIZE)).toEqual([2, 2]);
-            expect(utils_4.indexToCoordinates(STATE_LENGTH - 1)).toEqual([meta_7.FIELD_SIZE - 1, meta_7.FIELD_SIZE - 1]);
+            expect(utils_5.indexToCoordinates(0)).toEqual([0, 0]);
+            expect(utils_5.indexToCoordinates(meta_6.FIELD_SIZE)).toEqual([0, 1]);
+            expect(utils_5.indexToCoordinates(1 + 1 * meta_6.FIELD_SIZE)).toEqual([1, 1]);
+            expect(utils_5.indexToCoordinates(2 + 2 * meta_6.FIELD_SIZE)).toEqual([2, 2]);
+            expect(utils_5.indexToCoordinates(STATE_LENGTH - 1)).toEqual([meta_6.FIELD_SIZE - 1, meta_6.FIELD_SIZE - 1]);
         });
     });
     describe('utils.indexToCoordinates * indexToCoordinates', () => {
         it('returns the correct cross-results for all the indices', () => {
             for (let index = 0; index < STATE_LENGTH; index++) {
-                expect(utils_4.coordinatesToIndex(utils_4.indexToCoordinates(index))).toEqual(index);
+                expect(utils_5.coordinatesToIndex(utils_5.indexToCoordinates(index))).toEqual(index);
             }
         });
     });
     describe('utils.indexToCoordinates * indexToCoordinates', () => {
         it('returns the correct cross-results for all the coordinates', () => {
-            for (let x = 0; x < meta_7.FIELD_SIZE; x++) {
-                for (let y = 0; y < meta_7.FIELD_SIZE; y++) {
-                    expect(utils_4.indexToCoordinates(utils_4.coordinatesToIndex([x, y]))).toEqual([x, y]);
+            for (let x = 0; x < meta_6.FIELD_SIZE; x++) {
+                for (let y = 0; y < meta_6.FIELD_SIZE; y++) {
+                    expect(utils_5.indexToCoordinates(utils_5.coordinatesToIndex([x, y]))).toEqual([x, y]);
                 }
             }
         });
@@ -350,7 +366,7 @@ define("spec/utils.spec", ["require", "exports", "libs/meta", "libs/utils"], fun
             12, 13, 14, 15
         ];
         it('generator.returns the correct value', () => {
-            expect(utils_4.getEmptyTileCoordinates({ field: fieldWithEmptyAt11 })).toEqual([1, 1]);
+            expect(utils_5.getEmptyTileCoordinates({ field: fieldWithEmptyAt11 })).toEqual([1, 1]);
         });
     });
 });

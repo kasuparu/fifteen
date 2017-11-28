@@ -1,14 +1,15 @@
 import {
-    FIELD_SIZE,
     Field
 } from '../libs/meta';
+
+import {
+    STATE_LENGTH
+} from '../libs/utils';
 
 import {
     generateState,
     getInversionCounts
 } from '../libs/generator';
-
-const STATE_LENGTH = FIELD_SIZE * FIELD_SIZE;
 
 describe('generator.generateState', () => {
     const state = generateState();

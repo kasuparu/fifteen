@@ -12,6 +12,10 @@ import {
     isSolved
 } from '../libs/logic';
 
+import {
+    generateState
+} from '../libs/generator';
+
 // TODO Make all the fixtures and tests agnostic to the field size
 
 const stateWithEmptyAt11: State = {
@@ -153,9 +157,20 @@ const sortedStatesWithEmptyAt: State[] = [...Array(FIELD_SIZE - 2).keys()].map(
     }
 );
 
+const manyRandomStates: State[] = [];
+for (let index = 0; index < 100000; index++) {
+    manyRandomStates.push(generateState());
+}
+
 describe('logic.isSolved', () => {
     it('returns false for the unsolved fields that have 0 inversions', () => {
         sortedStatesWithEmptyAt.forEach((state) => {
+            expect(isSolved(state)).toEqual(false);
+        });
+    });
+
+    it('returns false for the unsolved generated fields', () => {
+        manyRandomStates.forEach((state) => {
             expect(isSolved(state)).toEqual(false);
         });
     });

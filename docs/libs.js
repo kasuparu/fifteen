@@ -181,7 +181,7 @@ define("spec/generator.spec", ["require", "exports", "libs/utils", "libs/generat
         });
     });
 });
-define("spec/logic.spec", ["require", "exports", "libs/meta", "libs/logic"], function (require, exports, meta_5, logic_2) {
+define("spec/logic.spec", ["require", "exports", "libs/meta", "libs/logic", "libs/generator"], function (require, exports, meta_5, logic_2, generator_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     // TODO Make all the fixtures and tests agnostic to the field size
@@ -309,9 +309,18 @@ define("spec/logic.spec", ["require", "exports", "libs/meta", "libs/logic"], fun
         field.splice(emptyTileIndex, 0, undefined); // Insert empty at
         return { field };
     });
+    const manyRandomStates = [];
+    for (let index = 0; index < 100000; index++) {
+        manyRandomStates.push(generator_4.generateState());
+    }
     describe('logic.isSolved', () => {
         it('returns false for the unsolved fields that have 0 inversions', () => {
             sortedStatesWithEmptyAt.forEach((state) => {
+                expect(logic_2.isSolved(state)).toEqual(false);
+            });
+        });
+        it('returns false for the unsolved generated fields', () => {
+            manyRandomStates.forEach((state) => {
                 expect(logic_2.isSolved(state)).toEqual(false);
             });
         });

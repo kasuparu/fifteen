@@ -47,9 +47,12 @@ export const getInversionsSum = (field: Field): number => {
     return arraySum(getInversionCounts(field));
 };
 
-export const getInversionCounts = (field: Field): number[] => {
+export const getInversionCounts = (fieldWithEmpty: Field): number[] => {
+    const field = fieldWithEmpty.slice();
+
+    // Disregard the empty tile
+    field.splice(getEmptyTileIndex(field), 1);
     const length = field.length;
-    replaceFirst(field, undefined, length);
 
     const inversionCounts = field.map((tile, index) => {
         let inversionCount = 0;
@@ -60,7 +63,6 @@ export const getInversionCounts = (field: Field): number[] => {
         }
         return inversionCount;
     });
-    replaceFirst(field, length, undefined);
 
     return inversionCounts;
 };
@@ -71,12 +73,4 @@ const arraySum = (array: number[]): number => {
 
 const getEmptyTileRow = (field: Field): number => {
     return getEmptyTileIndex(field) % FIELD_SIZE + 1;
-};
-
-const replaceFirst = (field: Field, find: number, replace: number) => {
-    field.forEach((tile, index) => {
-        if (tile === find) {
-            field[index] = replace;
-        }
-    });
 };

@@ -39,15 +39,24 @@ describe('generator.getInversionCounts', () => {
     const unsolvableField2: Field = [13, 10, 11, 6, 5, 7, 4, 8, 1, 12, 14, 9, 3, 15, 2, undefined];
 
     it('returns correct results for the solved field', () => {
-        expect(getInversionCounts(solvedField)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        const counts = getInversionCounts(solvedField);
+        expect(counts.length).toEqual(STATE_LENGTH - 1);
+        expect(counts).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     });
 
     it('returns correct results for solvable fields', () => {
-        expect(getInversionCounts(solvableField)).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]);
+        const counts = getInversionCounts(solvableField);
+        expect(counts.length).toEqual(STATE_LENGTH - 1);
+        expect(counts).toEqual([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     });
 
     it('returns correct results for unsolvable fields', () => {
-        expect(getInversionCounts(unsolvableField1)).toEqual([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-        expect(getInversionCounts(unsolvableField2)).toEqual([12, 9, 9, 5, 4, 4, 3, 3, 0, 3, 3, 2, 1, 1, 0, 0]);
+        const counts1 = getInversionCounts(unsolvableField1);
+        expect(counts1.length).toEqual(STATE_LENGTH - 1);
+        expect(counts1).toEqual([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+
+        const counts2 = getInversionCounts(unsolvableField2);
+        expect(counts2.length).toEqual(STATE_LENGTH - 1);
+        expect(counts2).toEqual([12, 9, 9, 5, 4, 4, 3, 3, 0, 3, 3, 2, 1, 1, 0]);
     });
 });
